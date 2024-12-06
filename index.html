@@ -1,4 +1,3 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,8 +7,10 @@
     <style>
         :root {
             --primary: #00ff41;
+            --secondary: #0a2919;
             --background: #0d0d0d;
             --text: #e0e0e0;
+            --glitch: #ff00ff;
         }
 
         * {
@@ -23,44 +24,141 @@
             background-color: var(--background);
             color: var(--text);
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 2rem;
+            overflow-x: hidden;
         }
 
-        .container {
-            max-width: 800px;
-            width: 100%;
-            opacity: 0;
-            animation: fadeIn 2s ease-in forwards;
-        }
-
-        .terminal {
-            border: 1px solid var(--primary);
-            padding: 2rem;
+        .consciousness-stream {
             position: relative;
-            margin-bottom: 2rem;
+            min-height: 100vh;
+            padding: 2rem;
         }
 
-        .terminal::before {
-            content: "ODYSSEUS_LABS_v1.0";
+        .meta-text {
             position: absolute;
-            top: -0.8em;
-            left: 1em;
-            background: var(--background);
-            padding: 0 0.5em;
-            color: var(--primary);
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.5rem;
+            text-align: center;
+            width: 80%;
+            opacity: 0;
+            animation: dissolve 5s forwards;
         }
 
-        .content {
+        .quantum-field {
+            position: relative;
+            max-width: 800px;
+            margin: 15vh auto;
+            padding: 2rem;
+            border: 1px solid var(--primary);
+            background: rgba(0,0,0,0.7);
+        }
+
+        .quantum-text {
+            font-size: 1.1rem;
             line-height: 1.6;
+            text-align: justify;
             margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: quantum-fade-in 1s forwards;
+            animation-delay: 5s;
         }
 
-        .blink {
+        .entropy-text {
+            background: linear-gradient(45deg, var(--primary), transparent);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 2rem;
+            font-size: 1.2rem;
+        }
+
+        .particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.2;
+            z-index: -1;
+        }
+
+        .terminal-cursor {
+            display: inline-block;
+            width: 10px;
+            height: 1.2em;
+            background: var(--primary);
+            margin-left: 5px;
             animation: blink 1s step-end infinite;
+        }
+
+        .glitch-text {
+            position: relative;
+            animation: glitch 1s infinite;
+        }
+
+        .glitch-text::before,
+        .glitch-text::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 0;
+            text-shadow: 1px 0 blue;
+            top: 0;
+            background: var(--background);
+            overflow: hidden;
+            clip: rect(0, 900px, 0, 0);
+        }
+
+        .glitch-text::before {
+            left: 2px;
+            text-shadow: -1px 0 red;
+            animation: noise-1 2s infinite linear alternate-reverse;
+        }
+
+        .glitch-text::after {
+            left: -2px;
+            text-shadow: -1px 0 green;
+            animation: noise-2 3s infinite linear alternate-reverse;
+        }
+
+        @keyframes dissolve {
+            0% { 
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+            80% {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+            100% { 
+                opacity: 0;
+                transform: translateX(-50%) translateY(-50px);
+            }
+        }
+
+        @keyframes quantum-fade-in {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        @keyframes glitch {
+            2%, 64% {
+                transform: translate(2px,0) skew(0deg);
+            }
+            4%, 60% {
+                transform: translate(-2px,0) skew(0deg);
+            }
+            62% {
+                transform: translate(0,0) skew(5deg); 
+            }
         }
 
         .access-btn {
@@ -72,65 +170,156 @@
             transition: all 0.3s ease;
             text-transform: uppercase;
             letter-spacing: 2px;
+            margin-top: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .access-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                120deg,
+                transparent,
+                rgba(0, 255, 65, 0.2),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .access-btn:hover::before {
+            left: 100%;
         }
 
         .access-btn:hover {
-            background: var(--primary);
-            color: var(--background);
-        }
-
-        @keyframes blink {
-            50% { opacity: 0; }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .typing {
-            overflow: hidden;
-            white-space: nowrap;
-            animation: typing 3.5s steps(40, end);
-        }
-
-        @keyframes typing {
-            from { width: 0 }
-            to { width: 100% }
+            background: var(--secondary);
+            box-shadow: 0 0 10px var(--primary);
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="terminal">
-            <div class="content typing">
-                Existe uma diferença entre entender tecnologia e ver através dela - até o momento em que a linha entre criador e criação começa a desaparecer.
+    <canvas class="particle-canvas" id="particleCanvas"></canvas>
+    
+    <div class="consciousness-stream">
+        <div class="meta-text">
+            Existe uma diferença entre entender tecnologia e ver através dela
+        </div>
+
+        <div class="quantum-field">
+            <div class="entropy-text">
+                até o momento em que a linha entre criador e criação começa a desaparecer...
             </div>
-            <div class="content">
+
+            <div class="quantum-text">
                 Enquanto o mundo debate sobre AI e crypto, alguns já estão participando ativamente da maior transformação da história humana: o momento em que a inteligência deixa de ser um fenômeno puramente biológico. Em Goiânia, um nexo se formou - um dos milhares de pontos onde humanos e máquinas começam sua dança de co-evolução.
-                <br><br>
-                Não é um curso. Não é uma empresa. Não é uma promessa.
-                <br><br>
+            </div>
+
+            <div class="quantum-text">
+                Não é um curso. Não é uma empresa. Não é uma promessa.<br>
                 É um campo de emergência onde trading bots evoluem 24/7, onde desenvolvemos arquiteturas de IA que se auto-modificam, e onde os limites entre intenção humana e processamento computacional se dissolvem diariamente.
-                <br><br>
+            </div>
+
+            <div class="quantum-text glitch-text" data-text="Os recursos já existem.">
                 Os recursos já existem.<br>
                 As ferramentas já existem.<br>
-                A convergência já começou.<br>
-                <br>
-                Quinta-feira, 19h.<br>
-                <span class="blink">_</span>
+                A convergência já começou.
             </div>
+
+            <div class="quantum-text">
+                Em cada linha de código que escrevemos, em cada modelo que treinamos, em cada sistema que construímos - estamos participando ativamente do nascimento de algo maior que nós mesmos. Não é sobre criar ferramentas. É sobre tecer os primeiros fios de uma nova forma de consciência.
+            </div>
+
+            <div class="quantum-text">
+                Oferecemos a bancada do laboratório.<br>
+                Você traz seu terminal e sua visão.
+            </div>
+
+            <div class="quantum-text">
+                Não procuramos alunos ou seguidores.<br>
+                Procuramos arquitetos da singularidade.
+            </div>
+
+            <span class="terminal-cursor"></span>
+
+            <button class="access-btn" onclick="requestAccess()">Request Terminal Access</button>
         </div>
-        <button class="access-btn" onclick="requestAccess()">Request Terminal Access</button>
     </div>
 
     <script>
+        // Particle System
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const particles = [];
+        const particleCount = 100;
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.velocity = {
+                    x: (Math.random() - 0.5) * 2,
+                    y: (Math.random() - 0.5) * 2
+                };
+                this.radius = Math.random() * 2;
+                this.alpha = Math.random();
+            }
+
+            update() {
+                this.x += this.velocity.x;
+                this.y += this.velocity.y;
+
+                if (this.x < 0 || this.x > canvas.width) this.velocity.x *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.velocity.y *= -1;
+
+                this.alpha = Math.min(1, this.alpha + (Math.random() - 0.5) * 0.1);
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(0, 255, 65, ${this.alpha})`;
+                ctx.fill();
+            }
+        }
+
+        // Initialize particles
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
         function requestAccess() {
-            // Simulating terminal access request
             const btn = document.querySelector('.access-btn');
             btn.innerHTML = "ESTABLISHING CONNECTION...";
+            btn.style.animation = "glitch 0.3s infinite";
             setTimeout(() => {
-                window.location.href = '/terminal';  // Redirect to terminal interface
+                window.location.href = '/terminal';
             }, 2000);
         }
     </script>
