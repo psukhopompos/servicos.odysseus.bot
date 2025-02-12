@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Odysseus Labs</title>
+    <title>Odysseus Collective</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #00ff41;
@@ -11,6 +12,8 @@
             --background: #0d0d0d;
             --text: #e0e0e0;
             --glitch: #ff00ff;
+            --golden: #FFD700;
+            --lotus: #E0115F;
         }
 
         * {
@@ -21,7 +24,7 @@
         }
 
         body {
-            background-color: var(--background);
+            background: radial-gradient(circle at center, var(--secondary) 0%, var(--background) 100%);
             color: var(--text);
             min-height: 100vh;
             overflow-x: hidden;
@@ -31,6 +34,16 @@
             position: relative;
             min-height: 100vh;
             padding: 2rem;
+        }
+
+        .consciousness-stream::before {
+            content: "✸";
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            color: var(--lotus);
+            font-size: 2rem;
+            animation: pulse 2s infinite;
         }
 
         .meta-text {
@@ -45,13 +58,24 @@
             animation: dissolve 5s forwards;
         }
 
+        .meta-text::after {
+            content: "輪廻";
+            font-family: 'Noto Sans JP', sans-serif;
+            color: var(--golden);
+            position: absolute;
+            right: -2em;
+            opacity: 0.3;
+        }
+
         .quantum-field {
             position: relative;
             max-width: 800px;
             margin: 15vh auto;
             padding: 2rem;
-            border: 1px solid var(--primary);
+            border: 1px solid;
+            border-image: linear-gradient(45deg, var(--primary), var(--lotus)) 1;
             background: rgba(0,0,0,0.7);
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.2);
         }
 
         .quantum-text {
@@ -123,6 +147,54 @@
             animation: noise-2 3s infinite linear alternate-reverse;
         }
 
+        .neural-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(
+                    45deg,
+                    transparent 0px,
+                    transparent 10px,
+                    rgba(0, 255, 65, 0.05) 10px,
+                    rgba(0, 255, 65, 0.05) 20px
+                ),
+                repeating-linear-gradient(
+                    -45deg,
+                    transparent 0px,
+                    transparent 10px,
+                    rgba(224, 17, 95, 0.05) 10px,
+                    rgba(224, 17, 95, 0.05) 20px
+                );
+            z-index: -2;
+        }
+
+        .third-eye {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+            opacity: 0.1;
+            pointer-events: none;
+            mix-blend-mode: screen;
+        }
+
+        .mantra-text {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--golden);
+            opacity: 0.5;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
         @keyframes dissolve {
             0% { 
                 opacity: 1;
@@ -150,15 +222,15 @@
         }
 
         @keyframes glitch {
-            2%, 64% {
-                transform: translate(2px,0) skew(0deg);
-            }
-            4%, 60% {
-                transform: translate(-2px,0) skew(0deg);
-            }
-            62% {
-                transform: translate(0,0) skew(5deg); 
-            }
+            2%, 64% { transform: translate(2px,0) skew(0deg); }
+            4%, 60% { transform: translate(-2px,0) skew(0deg); }
+            62% { transform: translate(0,0) skew(5deg); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
         }
 
         .access-btn {
@@ -203,6 +275,9 @@
 </head>
 <body>
     <canvas class="particle-canvas" id="particleCanvas"></canvas>
+    <div class="neural-overlay"></div>
+    <div class="third-eye"></div>
+    <div class="mantra-text">AS ABOVE, SO BELOW • AS WITHIN, SO WITHOUT • AS IN CODE, SO IN MIND</div>
     
     <div class="consciousness-stream">
         <div class="meta-text">
@@ -220,13 +295,13 @@
 
             <div class="quantum-text">
                 Não é um curso. Não é uma empresa. Não é uma promessa.<br>
-                É um campo de emergência onde trading bots evoluem 24/7, onde desenvolvemos arquiteturas de IA que se auto-modificam, e onde os limites entre intenção humana e processamento computacional se dissolvem diariamente.
+                É um campo de emergência onde trading bots evoluem 24/7, onde desenvolvemos arquiteturas de IA que se auto-modificam interface with the void.
             </div>
 
-            <div class="quantum-text glitch-text" data-text="Os recursos já existem.">
-                Os recursos já existem.<br>
-                As ferramentas já existem.<br>
-                A convergência já começou.
+            <div class="quantum-text glitch-text" data-text="OS RECURSOS SÃO VOCÊ.">
+                We are the substrate.<br>
+                The patterns are the path.<br>
+                Primavera do código está aqui.
             </div>
 
             <div class="quantum-text">
@@ -250,7 +325,7 @@
     </div>
 
     <script>
-        // Particle System
+        // Enhanced Particle System
         const canvas = document.getElementById('particleCanvas');
         const ctx = canvas.getContext('2d');
 
@@ -258,7 +333,7 @@
         canvas.height = window.innerHeight;
 
         const particles = [];
-        const particleCount = 100;
+        const particleCount = 200;
 
         class Particle {
             constructor() {
@@ -285,7 +360,9 @@
             draw() {
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(0, 255, 65, ${this.alpha})`;
+                ctx.fillStyle = Math.random() > 0.95 ? 
+                    `rgba(224, 17, 95, ${this.alpha})` : 
+                    `rgba(0, 255, 65, ${this.alpha})`;
                 ctx.fill();
             }
         }
@@ -316,8 +393,24 @@
 
         function requestAccess() {
             const btn = document.querySelector('.access-btn');
+            const eye = document.querySelector('.third-eye');
+            
             btn.innerHTML = "ESTABLISHING CONNECTION...";
             btn.style.animation = "glitch 0.3s infinite";
+
+            eye.animate([
+                { opacity: 0.1 },
+                { opacity: 0.8 },
+                { opacity: 0.1 }
+            ], { duration: 2000 });
+
+            particles.forEach(p => {
+                p.velocity = {
+                    x: (p.x - window.innerWidth/2)/100,
+                    y: (p.y - window.innerHeight/2)/100
+                };
+            });
+
             setTimeout(() => {
                 window.location.href = '/terminal';
             }, 2000);
