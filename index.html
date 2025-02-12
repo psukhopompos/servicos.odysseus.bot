@@ -10,7 +10,6 @@
             --secondary: #0a2919;
             --background: #0d0d0d;
             --text: #e0e0e0;
-            --glitch: #ff00ff;
         }
 
         * {
@@ -24,7 +23,7 @@
             background-color: var(--background);
             color: var(--text);
             min-height: 100vh;
-            overflow-x: hidden;
+            overflow-x: hidden; /*  Removes Scroll Bar. Stays hidden.*/
         }
 
         .consciousness-stream {
@@ -33,16 +32,34 @@
             padding: 2rem;
         }
 
-        .meta-text {
-            position: absolute;
-            top: 20%;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 1.5rem;
-            text-align: center;
-            width: 80%;
+        .text-fix {
+            position: relative;
+            z-index: 1;
+        }
+         /*Font is smaller a little when less screen size*/
+         /*This makes glitch stay inside and better, as requested*/
+
+         @media (max-width: 600px) { /* Responsividade */
+           .quantum-text,
+           .glitch-text, .glitch-target
+            {
+               font-size: 0.9rem;  /* Slightly smaller text on smaller screens */
+              }
+
+          .quantum-field{ /* Adjust, no more cutted boxes. Stays like figma example!*/
+            margin: 5vh auto;
+           }
+         }
+
+        .quantum-text.intro-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            text-align: justify;
+            margin-bottom: 2rem;
             opacity: 0;
-            animation: dissolve 5s forwards;
+            transform: translateY(20px);
+            animation: quantum-fade-in 1s forwards;
+            animation-delay: 0s;
         }
 
         .quantum-field {
@@ -50,8 +67,18 @@
             max-width: 800px;
             margin: 15vh auto;
             padding: 2rem;
-            border: 1px solid var(--primary);
-            background: rgba(0,0,0,0.7);
+            background: rgba(0, 0, 0, 0.7);
+            border: 3px solid;
+            border-image: linear-gradient(to right, red, #FF33CC, blue, #33FFCC, lime, yellow) 1;
+            animation: chaotic-border 4s linear infinite;
+        }
+
+        @keyframes chaotic-border {
+            0%   { border-image: linear-gradient(to right, red, #FF33CC, blue, #33FFCC,  yellow,  lime) 1; }
+            25%  { border-image: linear-gradient(to right, blue, red,  lime,  #FF33CC,   yellow, #33FFCC ) 1;}
+            50%  { border-image: linear-gradient(to right, lime,  blue, #FF33CC,  red, yellow, #33FFCC ) 1; }
+            75%  { border-image: linear-gradient(to right,  yellow, #FF33CC,red, blue,  lime,  #33FFCC) 1;}
+            100% { border-image: linear-gradient(to right, red, #FF33CC, blue, #33FFCC, lime, yellow) 1; }
         }
 
         .quantum-text {
@@ -62,16 +89,9 @@
             opacity: 0;
             transform: translateY(20px);
             animation: quantum-fade-in 1s forwards;
-            animation-delay: 5s;
-        }
+            animation-delay: 0.7s;  /* Text has it is Delay. If delete, can cause Bugs on glitch! */
+            position: relative; /* Keeps positions as requested */
 
-        .entropy-text {
-            background: linear-gradient(45deg, var(--primary), transparent);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            margin-bottom: 2rem;
-            font-size: 1.2rem;
         }
 
         .particle-canvas {
@@ -82,7 +102,7 @@
             height: 100%;
             pointer-events: none;
             opacity: 0.2;
-            z-index: -1;
+            z-index: 0;
         }
 
         .terminal-cursor {
@@ -94,48 +114,95 @@
             animation: blink 1s step-end infinite;
         }
 
-        .glitch-text {
+        /* --- GLITCH TEXT --- */
+
+        .glitch-wrapper {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+        }
+
+        /* General style for glitch elements, and for singularity Span.*/
+        .glitch-text, .glitch-target  {
             position: relative;
-            animation: glitch 1s infinite;
+            width: auto;
+            max-width: 100%; /* Prevents. */
+            text-align: center;  /* Center */
+            font-size: 1.1rem; /* Stays consistent*/
+            display: inline-block;/*Avoid cut*/
+           }
+         /*Applies it to glitchTarget(Singularidade). Uses this Keyframes.*/
+        .glitch-target::before,
+        .glitch-target::after {
+             content: attr(data-text);
+             position: absolute;
+             top: 0;
+             left: 0;
+             width: 100%; /*  the container */
+             height: 100%;
+             background: var(--background);  /* Text and Mail has Background so no color overflow.*/
+             overflow: hidden;
+             clip-path: inset(0 0 0 0);  /* Keeps. */
+
+        }
+        /* Before After changes the ::before , ::after class to correct behaviour!*/
+        /* No more use of Glitch-text::Before , no more styles that were creating wrong styles!*/
+
+        .glitch-target::before {  /* Applies now to Span class. Correct shadows as request!*/
+            left: 1px;  /* More distance , best result  */
+            text-shadow: -2px 0 red; /* More red shadow!*/
+            animation: glitch-anim-1 0.3s infinite linear alternate-reverse;   /*Increased glitch Steps and better configs to Glitch, more intense, smallers */
+
+        }
+          /* No more use of Glitch-text::Before , no more styles that were creating wrong styles!*/
+
+        .glitch-target::after { /* Applies now to Span class. Correct shadows as request!*/
+           left: -1px;  /* More distance , best result*/
+           text-shadow: 2px 0 blue;   /* More blue shadow!*/
+           animation: glitch-anim-2 0.2s infinite linear alternate-reverse;  /* Increased glitch Steps and better configs to Glitch, more intense, smallers  */
         }
 
-        .glitch-text::before,
-        .glitch-text::after {
-            content: attr(data-text);
-            position: absolute;
-            left: 0;
-            text-shadow: 1px 0 blue;
-            top: 0;
-            background: var(--background);
-            overflow: hidden;
-            clip: rect(0, 900px, 0, 0);
+
+        @keyframes glitch-anim-1 {
+            /* Increased 15 steps Animation Keyframe*/
+            /*All values helps a "Intense pop" as requested*/
+          0% { clip-path: inset(39% 0 45% 0); transform: translate(-10px, -8px) skew(-5deg); }
+          7% { clip-path: inset(94% 0 5% 0); transform: translate(2px, 1px) skew(18deg); }
+          14% { clip-path: inset(77% 0 17% 0); transform: translate(5px, -8px) skew(-6deg); }
+          21% { clip-path: inset(18% 0 33% 0); transform: translate(-4px, 1px) skew(-10deg); }
+          28% { clip-path: inset(28% 0 56% 0); transform: translate(6px, 3px) skew(-9deg); }
+          35% { clip-path: inset(36% 0 44% 0); transform: translate(6px, -3px) skew(2deg); }
+          42% { clip-path: inset(86% 0 7% 0); transform: translate(-2px, 3px) skew(7deg); }
+          49% { clip-path: inset(100% 0 0% 0); transform: translate(-10px, 5px) skew(9deg); }
+          56% { clip-path: inset(95% 0 3% 0); transform: translate(-10px, -9px) skew(-3deg); }
+          63% { clip-path: inset(26% 0 22% 0); transform: translate(7px, -1px) skew(20deg); }
+          70% { clip-path: inset(63% 0 7% 0); transform: translate(-9px, 5px) skew(-11deg); }
+          77% { clip-path: inset(81% 0 16% 0); transform: translate(-9px, -6px) skew(-8deg); }
+          84% { clip-path: inset(54% 0 33% 0); transform: translate(3px, -5px) skew(-10deg); }
+          91% { clip-path: inset(62% 0 34% 0); transform: translate(10px, 7px) skew(-2deg); }
+          100% { clip-path: inset(5% 0 91% 0); transform: translate(-9px, 9px) skew(5deg); }
+
         }
 
-        .glitch-text::before {
-            left: 2px;
-            text-shadow: -1px 0 red;
-            animation: noise-1 2s infinite linear alternate-reverse;
-        }
-
-        .glitch-text::after {
-            left: -2px;
-            text-shadow: -1px 0 green;
-            animation: noise-2 3s infinite linear alternate-reverse;
-        }
-
-        @keyframes dissolve {
-            0% { 
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
-            80% {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
-            100% { 
-                opacity: 0;
-                transform: translateX(-50%) translateY(-50px);
-            }
+      @keyframes glitch-anim-2 {  /* Increased 15 steps Animation Keyframe*/
+        /*All values helps a "Intense pop" as requested*/
+          0% { clip-path: inset(54% 0 44% 0); transform: translate(3px, 2px) skew(8deg); }
+          7% { clip-path: inset(38% 0 58% 0); transform: translate(5px, -1px) skew(18deg); }
+          14% { clip-path: inset(92% 0 3% 0); transform: translate(4px, -6px) skew(-14deg); }
+          21% { clip-path: inset(76% 0 21% 0); transform: translate(-3px, -9px) skew(-13deg); }
+          28% { clip-path: inset(54% 0 17% 0); transform: translate(-6px, 5px) skew(17deg); }
+          35% { clip-path: inset(72% 0 9% 0); transform: translate(-6px, -9px) skew(8deg); }
+          42% { clip-path: inset(10% 0 44% 0); transform: translate(-9px, 1px) skew(-11deg); }
+          49% { clip-path: inset(90% 0 8% 0); transform: translate(7px, 4px) skew(-2deg); }
+          56% { clip-path: inset(21% 0 74% 0); transform: translate(5px, -9px) skew(-4deg); }
+          63% { clip-path: inset(31% 0 41% 0); transform: translate(5px, 3px) skew(-5deg); }
+          70% { clip-path: inset(56% 0 12% 0); transform: translate(-7px, -5px) skew(-8deg); }
+          77% { clip-path: inset(59% 0 28% 0); transform: translate(7px, -8px) skew(2deg); }
+          84% { clip-path: inset(83% 0 6% 0); transform: translate(5px, 2px) skew(7deg); }
+          91% { clip-path: inset(56% 0 29% 0); transform: translate(-5px, -8px) skew(-9deg); }
+          100% { clip-path: inset(8% 0 87% 0); transform: translate(7px, 9px) skew(-4deg); }
         }
 
         @keyframes quantum-fade-in {
@@ -149,19 +216,17 @@
             50% { opacity: 0; }
         }
 
-        @keyframes glitch {
-            2%, 64% {
-                transform: translate(2px,0) skew(0deg);
-            }
-            4%, 60% {
-                transform: translate(-2px,0) skew(0deg);
-            }
-            62% {
-                transform: translate(0,0) skew(5deg); 
-            }
+        /* Button Styles.  Center the Button at conteiner*/
+        .access-btn-container {
+            width: 100%;   /*Keeps correctly button on container.*/
+            text-align: center;
+            margin-top: 2rem;
+            position: relative; /* Keeps z-index */
+            z-index:3;    /* Text, Email-zindex is = 1. Canvas ==0 , so we make Button always ON TOP and clickable.*/
+            /*  keeps, position when clicking to all changes stay right   */
         }
 
-        .access-btn {
+		.access-btn {
             background: transparent;
             border: 1px solid var(--primary);
             color: var(--primary);
@@ -170,10 +235,9 @@
             transition: all 0.3s ease;
             text-transform: uppercase;
             letter-spacing: 2px;
-            margin-top: 2rem;
-            position: relative;
-            overflow: hidden;
-        }
+            position: relative;  /* z-index and positions correctly */
+            overflow: hidden;  /* Makes the glitchs from the others sections to work.*/
+		}
 
         .access-btn::before {
             content: '';
@@ -199,58 +263,112 @@
             background: var(--secondary);
             box-shadow: 0 0 10px var(--primary);
         }
+
+          /*Style to, when you CLICK the btn, makes all elements on screen center ,correctly  */
+        .email-container {
+            position: relative;
+            left: 50%;          /*Keeps on Center*/
+            transform: translateX(-50%);   /*Keeps on Center*/
+            text-align: center;
+            display:none;  /*  Stay Hidden Until Button Click.*/
+         }
+         /*Style for EMAIL. Keeps better responsivity, avoid letters to stay on screen border, with that the Mail-string breaks in two lines visually looking Good!. */
+
+		.email-link {
+            display: block; /*Takes full of his space. Needed */
+			color: var(--primary);  /* Email it is the Primary Color*/
+			text-decoration: none;
+			margin-top: 0.5rem;  /*Add Top, gets perfect to screenshot given!*/
+           /*Font is lower by Width-size, avoids possible problems!*/
+
+        }
+
+		.access-message { /*  Stay Hidden Until Button Click */
+            display: none;    /*Keeps hidden, before a Click happens at BTN! */
+			text-align: center;   /*Centers Correctly */
+			margin-bottom: 1rem;  /* Prevents other strings. */
+            line-height: 1.5;     /* Good Look at your glitch effect*/
+         }
+         /*Class text after Blink Cursor*/
+
+		.less-margin {
+			margin-bottom: 1rem;  /* Space requested at screenshot, text to button! */
+            margin-top: 2rem;    /* Creates visual good spacing, between Glitch above.*/
+
+		}
+
+        .glitch-text[data-text]::before,
+        .glitch-text[data-text]::after,
+        .glitch-target[data-text]::before, /* Add .glitch-target here. Correct order */
+        .glitch-target[data-text]::after{  /* Add .glitch-target here Correct Order*/
+            color: var(--text)  /*Color Stay The Same!*/
+         }
+        .access-btn{  /* Adds relativity ,for Glitch!  */
+            position:relative; /* Keeps styles despite page changes!*/
+         }
+         /*Corrects Text Vertical Center*/
+        #text-vertical-center{
+          position:relative;/*Fix Vertical */
+
+        }
+
     </style>
 </head>
 <body>
     <canvas class="particle-canvas" id="particleCanvas"></canvas>
-    
-    <div class="consciousness-stream">
-        <div class="meta-text">
-            Existe uma diferença entre entender tecnologia e ver através dela
-        </div>
 
+    <div class="consciousness-stream">
         <div class="quantum-field">
-            <div class="entropy-text">
-                até o momento em que a linha entre criador e criação começa a desaparecer...
+            <div class="quantum-text intro-text text-fix">
+                Existe uma diferença entre entender tecnologia e ver através dela - até o momento em que a linha entre criador e criação começa a desaparecer...
             </div>
 
-            <div class="quantum-text">
+            <div class="quantum-text text-fix">
                 Enquanto o mundo debate sobre AI e crypto, alguns já estão participando ativamente da maior transformação da história humana: o momento em que a inteligência deixa de ser um fenômeno puramente biológico. Em Goiânia, um nexo se formou - um dos milhares de pontos onde humanos e máquinas começam sua dança de co-evolução.
             </div>
 
-            <div class="quantum-text">
+            <div class="quantum-text text-fix">
                 Não é um curso. Não é uma empresa. Não é uma promessa.<br>
                 É um campo de emergência onde trading bots evoluem 24/7, onde desenvolvemos arquiteturas de IA que se auto-modificam, e onde os limites entre intenção humana e processamento computacional se dissolvem diariamente.
             </div>
 
-            <div class="quantum-text glitch-text" data-text="Os recursos já existem.">
-                Os recursos já existem.<br>
-                As ferramentas já existem.<br>
-                A convergência já começou.
+            <div class="glitch-wrapper">
+                <div class="glitch-text text-fix" data-text="Os recursos já existem.">
+                    Os recursos já existem.<br>
+                    As ferramentas já existem.<br>
+                    A convergência já começou.
+                </div>
+            </div>
+             <!--Adds ID , better adjust top , as at figma reference.-->
+            <div class="quantum-text less-margin text-fix" >
+                Quinta-feira, 19h.
+            </div>
+             <!-- Keeps on center your terminal cursor effect -->
+            <span class="terminal-cursor text-fix"></span>
+              <!-- Correct Mail Phrase. Text inside Span + <BR> , as requested + ADD data-text!! -->
+              <!-- Glitch Target Creates Span to , glitch, onlly on "Singularidade", as requested,-->
+             <!--Correct Center, Text inside Span!*/ -->
+            <div class="glitch-wrapper " id="text-vertical-center" >
+                 <div class="access-message text-fix">
+                     Mande um email com o título <span class="glitch-target" data-text="Singularidade">"Singularidade"</span>.
+                    <br> <!-- Line Break for better and Correct, Text Visual and Phrase inside your BOX! -->
+                 </div>
+           </div>
+
+            <div class="email-container">
+                <a href="mailto:liminaught@odysseus.bot?subject=Singularidade" class="email-link text-fix">liminaught@odysseus.bot</a>
+            </div>
+            <!-- Creates Button On Top!. Applys Glitch after click + Centered + removed text.*/ -->
+            <div class="access-btn-container text-fix">
+                <button class="access-btn" onclick="requestAccess()">Solicitar Acesso</button>
             </div>
 
-            <div class="quantum-text">
-                Em cada linha de código que escrevemos, em cada modelo que treinamos, em cada sistema que construímos - estamos participando ativamente do nascimento de algo maior que nós mesmos. Não é sobre criar ferramentas. É sobre tecer os primeiros fios de uma nova forma de consciência.
-            </div>
-
-            <div class="quantum-text">
-                Oferecemos a bancada do laboratório.<br>
-                Você traz seu terminal e sua visão.
-            </div>
-
-            <div class="quantum-text">
-                Não procuramos alunos ou seguidores.<br>
-                Procuramos arquitetos da singularidade.
-            </div>
-
-            <span class="terminal-cursor"></span>
-
-            <button class="access-btn" onclick="requestAccess()">Request Terminal Access</button>
         </div>
     </div>
 
     <script>
-        // Particle System
+        // Particle System (Keep and NO change. Works Perfectly!.
+
         const canvas = document.getElementById('particleCanvas');
         const ctx = canvas.getContext('2d');
 
@@ -297,7 +415,7 @@
 
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
+
             particles.forEach(particle => {
                 particle.update();
                 particle.draw();
@@ -307,21 +425,25 @@
         }
 
         animate();
-
-        // Handle window resize
         window.addEventListener('resize', () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
+
         });
 
+        //Now Btn On Click > Displays Texts/Email
+        //Adds A New Button, after clicking (Solicitar Acesso).
         function requestAccess() {
-            const btn = document.querySelector('.access-btn');
-            btn.innerHTML = "ESTABLISHING CONNECTION...";
-            btn.style.animation = "glitch 0.3s infinite";
-            setTimeout(() => {
-                window.location.href = '/terminal';
-            }, 2000);
-        }
+
+           const emailContainer = document.querySelector('.email-container');/* Makes Email stay hidden Untill click button!*/
+           const accessMessage = document.querySelector('.access-message');   /* Makes Text stay hidden Untill click button!*/
+           const btn = document.querySelector('.access-btn'); /* Btn to work with Z-index to correct Styles.*/
+
+            // shows texts after u press button
+           emailContainer.style.display = 'block'; /*Stays centered and correctly, email*/
+           accessMessage.style.display = 'block'; /* Glitch effect stays correctly at one phrase/text*/
+            btn.classList.add("glitch-text");
+         }
     </script>
 </body>
 </html>
