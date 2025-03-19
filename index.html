@@ -1,449 +1,1022 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Odysseus Labs</title>
+    <title>Odysseus Labs | Inteligência Aplicada</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #00ff41;
-            --secondary: #0a2919;
-            --background: #0d0d0d;
-            --text: #e0e0e0;
+            --primary: #5d7adb; /* Azul mais suave e natural */
+            --secondary: #2a3b5f; /* Azul profundo mais terroso */
+            --accent: #e069ce; /* Rosa mais suave */
+            --background: #0e1825; /* Azul noite mais natural */
+            --surface: #1e2937; /* Azul escuro médio com tom mais orgânico */
+            --text: #e8eff9; /* Branco levemente azulado para conforto visual */
+            --glow: rgba(93, 122, 219, 0.3); /* Brilho suave do primary */
+            --natural1: #3d5a80; /* Azul oceânico */
+            --natural2: #98c1d9; /* Azul céu suave */
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Courier New', monospace;
+            font-family: 'Sora', sans-serif;
         }
 
         body {
             background-color: var(--background);
             color: var(--text);
-            min-height: 100vh;
-            overflow-x: hidden; /*  Removes Scroll Bar. Stays hidden.*/
+            overflow-x: hidden;
+            line-height: 1.6;
         }
 
-        .consciousness-stream {
-            position: relative;
-            min-height: 100vh;
-            padding: 2rem;
-        }
-
-        .text-fix {
+        /* Layout Centralizado */
+        .container {
+            width: 90%;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 0;
             position: relative;
             z-index: 1;
         }
-         /*Font is smaller a little when less screen size*/
-         /*This makes glitch stay inside and better, as requested*/
 
-         @media (max-width: 600px) { /* Responsividade */
-           .quantum-text,
-           .glitch-text, .glitch-target
-            {
-               font-size: 0.9rem;  /* Slightly smaller text on smaller screens */
-              }
-
-          .quantum-field{ /* Adjust, no more cutted boxes. Stays like figma example!*/
-            margin: 5vh auto;
-           }
-         }
-
-        .quantum-text.intro-text {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            text-align: justify;
-            margin-bottom: 2rem;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: quantum-fade-in 1s forwards;
-            animation-delay: 0s;
-        }
-
-        .quantum-field {
-            position: relative;
-            max-width: 800px;
-            margin: 15vh auto;
-            padding: 2rem;
-            background: rgba(0, 0, 0, 0.7);
-            border: 3px solid;
-            border-image: linear-gradient(to right, red, #FF33CC, blue, #33FFCC, lime, yellow) 1;
-            animation: chaotic-border 4s linear infinite;
-        }
-
-        @keyframes chaotic-border {
-            0%   { border-image: linear-gradient(to right, red, #FF33CC, blue, #33FFCC,  yellow,  lime) 1; }
-            25%  { border-image: linear-gradient(to right, blue, red,  lime,  #FF33CC,   yellow, #33FFCC ) 1;}
-            50%  { border-image: linear-gradient(to right, lime,  blue, #FF33CC,  red, yellow, #33FFCC ) 1; }
-            75%  { border-image: linear-gradient(to right,  yellow, #FF33CC,red, blue,  lime,  #33FFCC) 1;}
-            100% { border-image: linear-gradient(to right, red, #FF33CC, blue, #33FFCC, lime, yellow) 1; }
-        }
-
-        .quantum-text {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            text-align: justify;
-            margin-bottom: 2rem;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: quantum-fade-in 1s forwards;
-            animation-delay: 0.7s;  /* Text has it is Delay. If delete, can cause Bugs on glitch! */
-            position: relative; /* Keeps positions as requested */
-
-        }
-
-        .particle-canvas {
+        /* Background Orgânico */
+        .fluid-bg {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             pointer-events: none;
-            opacity: 0.2;
+            opacity: 0.3;
             z-index: 0;
+            background: linear-gradient(40deg, var(--secondary), transparent);
         }
 
-        .terminal-cursor {
-            display: inline-block;
-            width: 10px;
-            height: 1.2em;
+        /* Elementos fluidos inspirados na natureza */
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.4;
+            animation: blob-float 20s infinite alternate ease-in-out;
+            z-index: -1;
+            transition: all 0.5s ease;
+        }
+
+        .blob:nth-child(1) {
+            width: 400px;
+            height: 400px;
+            top: 10%;
+            left: -10%;
+            background: var(--natural1);
+            animation-delay: 0s;
+        }
+
+        .blob:nth-child(2) {
+            width: 300px;
+            height: 300px;
+            top: 40%;
+            right: -5%;
+            background: var(--natural2);
+            animation-delay: 5s;
+        }
+
+        .blob:nth-child(3) {
+            width: 350px;
+            height: 350px;
+            bottom: 5%;
+            left: 20%;
             background: var(--primary);
-            margin-left: 5px;
-            animation: blink 1s step-end infinite;
+            animation-delay: 10s;
+            opacity: 0.3;
         }
 
-        /* --- GLITCH TEXT --- */
-
-        .glitch-wrapper {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-        }
-
-        /* General style for glitch elements, and for singularity Span.*/
-        .glitch-text, .glitch-target  {
-            position: relative;
-            width: auto;
-            max-width: 100%; /* Prevents. */
-            text-align: center;  /* Center */
-            font-size: 1.1rem; /* Stays consistent*/
-            display: inline-block;/*Avoid cut*/
-           }
-         /*Applies it to glitchTarget(Singularidade). Uses this Keyframes.*/
-        .glitch-target::before,
-        .glitch-target::after {
-             content: attr(data-text);
-             position: absolute;
-             top: 0;
-             left: 0;
-             width: 100%; /*  the container */
-             height: 100%;
-             background: var(--background);  /* Text and Mail has Background so no color overflow.*/
-             overflow: hidden;
-             clip-path: inset(0 0 0 0);  /* Keeps. */
-
-        }
-        /* Before After changes the ::before , ::after class to correct behaviour!*/
-        /* No more use of Glitch-text::Before , no more styles that were creating wrong styles!*/
-
-        .glitch-target::before {  /* Applies now to Span class. Correct shadows as request!*/
-            left: 1px;  /* More distance , best result  */
-            text-shadow: -2px 0 red; /* More red shadow!*/
-            animation: glitch-anim-1 0.3s infinite linear alternate-reverse;   /*Increased glitch Steps and better configs to Glitch, more intense, smallers */
-
-        }
-          /* No more use of Glitch-text::Before , no more styles that were creating wrong styles!*/
-
-        .glitch-target::after { /* Applies now to Span class. Correct shadows as request!*/
-           left: -1px;  /* More distance , best result*/
-           text-shadow: 2px 0 blue;   /* More blue shadow!*/
-           animation: glitch-anim-2 0.2s infinite linear alternate-reverse;  /* Increased glitch Steps and better configs to Glitch, more intense, smallers  */
-        }
-
-
-        @keyframes glitch-anim-1 {
-            /* Increased 15 steps Animation Keyframe*/
-            /*All values helps a "Intense pop" as requested*/
-          0% { clip-path: inset(39% 0 45% 0); transform: translate(-10px, -8px) skew(-5deg); }
-          7% { clip-path: inset(94% 0 5% 0); transform: translate(2px, 1px) skew(18deg); }
-          14% { clip-path: inset(77% 0 17% 0); transform: translate(5px, -8px) skew(-6deg); }
-          21% { clip-path: inset(18% 0 33% 0); transform: translate(-4px, 1px) skew(-10deg); }
-          28% { clip-path: inset(28% 0 56% 0); transform: translate(6px, 3px) skew(-9deg); }
-          35% { clip-path: inset(36% 0 44% 0); transform: translate(6px, -3px) skew(2deg); }
-          42% { clip-path: inset(86% 0 7% 0); transform: translate(-2px, 3px) skew(7deg); }
-          49% { clip-path: inset(100% 0 0% 0); transform: translate(-10px, 5px) skew(9deg); }
-          56% { clip-path: inset(95% 0 3% 0); transform: translate(-10px, -9px) skew(-3deg); }
-          63% { clip-path: inset(26% 0 22% 0); transform: translate(7px, -1px) skew(20deg); }
-          70% { clip-path: inset(63% 0 7% 0); transform: translate(-9px, 5px) skew(-11deg); }
-          77% { clip-path: inset(81% 0 16% 0); transform: translate(-9px, -6px) skew(-8deg); }
-          84% { clip-path: inset(54% 0 33% 0); transform: translate(3px, -5px) skew(-10deg); }
-          91% { clip-path: inset(62% 0 34% 0); transform: translate(10px, 7px) skew(-2deg); }
-          100% { clip-path: inset(5% 0 91% 0); transform: translate(-9px, 9px) skew(5deg); }
-
-        }
-
-      @keyframes glitch-anim-2 {  /* Increased 15 steps Animation Keyframe*/
-        /*All values helps a "Intense pop" as requested*/
-          0% { clip-path: inset(54% 0 44% 0); transform: translate(3px, 2px) skew(8deg); }
-          7% { clip-path: inset(38% 0 58% 0); transform: translate(5px, -1px) skew(18deg); }
-          14% { clip-path: inset(92% 0 3% 0); transform: translate(4px, -6px) skew(-14deg); }
-          21% { clip-path: inset(76% 0 21% 0); transform: translate(-3px, -9px) skew(-13deg); }
-          28% { clip-path: inset(54% 0 17% 0); transform: translate(-6px, 5px) skew(17deg); }
-          35% { clip-path: inset(72% 0 9% 0); transform: translate(-6px, -9px) skew(8deg); }
-          42% { clip-path: inset(10% 0 44% 0); transform: translate(-9px, 1px) skew(-11deg); }
-          49% { clip-path: inset(90% 0 8% 0); transform: translate(7px, 4px) skew(-2deg); }
-          56% { clip-path: inset(21% 0 74% 0); transform: translate(5px, -9px) skew(-4deg); }
-          63% { clip-path: inset(31% 0 41% 0); transform: translate(5px, 3px) skew(-5deg); }
-          70% { clip-path: inset(56% 0 12% 0); transform: translate(-7px, -5px) skew(-8deg); }
-          77% { clip-path: inset(59% 0 28% 0); transform: translate(7px, -8px) skew(2deg); }
-          84% { clip-path: inset(83% 0 6% 0); transform: translate(5px, 2px) skew(7deg); }
-          91% { clip-path: inset(56% 0 29% 0); transform: translate(-5px, -8px) skew(-9deg); }
-          100% { clip-path: inset(8% 0 87% 0); transform: translate(7px, 9px) skew(-4deg); }
-        }
-
-        @keyframes quantum-fade-in {
-            to {
-                opacity: 1;
-                transform: translateY(0);
+        @keyframes blob-float {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+            50% {
+                transform: translate(30px, 20px) scale(1.05);
+            }
+            100% {
+                transform: translate(-20px, 40px) scale(0.95);
             }
         }
 
-        @keyframes blink {
-            50% { opacity: 0; }
+        /* Navegação com elementos orgânicos */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
         }
 
-        /* Button Styles.  Center the Button at conteiner*/
-        .access-btn-container {
-            width: 100%;   /*Keeps correctly button on container.*/
-            text-align: center;
-            margin-top: 2rem;
-            position: relative; /* Keeps z-index */
-            z-index:3;    /* Text, Email-zindex is = 1. Canvas ==0 , so we make Button always ON TOP and clickable.*/
-            /*  keeps, position when clicking to all changes stay right   */
+        .logo {
+            font-weight: 500;
+            font-size: 1.8rem;
+            color: var(--text);
+            text-decoration: none;
+            position: relative;
+            letter-spacing: -0.5px;
         }
 
-		.access-btn {
-            background: transparent;
-            border: 1px solid var(--primary);
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), transparent);
+            border-radius: 2px;
+        }
+
+        nav {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        nav a {
+            color: var(--text);
+            text-decoration: none;
+            position: relative;
+            opacity: 0.8;
+            transition: all 0.3s;
+            font-weight: 400;
+        }
+
+        nav a:hover {
+            opacity: 1;
             color: var(--primary);
-            padding: 1rem 2rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            position: relative;  /* z-index and positions correctly */
-            overflow: hidden;  /* Makes the glitchs from the others sections to work.*/
-		}
+        }
 
-        .access-btn::before {
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            border-radius: 1px;
+            transition: width 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Botões inspirados em gotas d'água */
+        .btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 0.75rem 1.8rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            font-weight: 500;
+            display: inline-block;
+            text-decoration: none;
+            box-shadow: 0 4px 15px var(--glow);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            font-size: 1rem;
+        }
+
+        .btn::before {
             content: '';
             position: absolute;
             top: 0;
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(
-                120deg,
-                transparent,
-                rgba(0, 255, 65, 0.2),
-                transparent
-            );
-            transition: 0.5s;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        .access-btn:hover::before {
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px var(--glow);
+        }
+
+        .btn:hover::before {
             left: 100%;
         }
 
-        .access-btn:hover {
-            background: var(--secondary);
-            box-shadow: 0 0 10px var(--primary);
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            box-shadow: none;
         }
 
-          /*Style to, when you CLICK the btn, makes all elements on screen center ,correctly  */
-        .email-container {
+        .btn-secondary:hover {
+            background: rgba(93, 122, 219, 0.1);
+            box-shadow: 0 4px 15px rgba(93, 122, 219, 0.2);
+        }
+
+        /* Hero Section com elementos naturais */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 80vh;
+            padding: 2rem 0;
             position: relative;
-            left: 50%;          /*Keeps on Center*/
-            transform: translateX(-50%);   /*Keeps on Center*/
+            overflow: hidden; /* Para conter a imagem */
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2; /* Garante que o conteúdo fique acima da imagem */
+            max-width: 60%; /* Deixa espaço para a imagem à direita */
+        }
+
+        .hero-image {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 70%; /* Cobre aproximadamente o último terço da seção */
+            background-image: url('hero.jpeg');
+            background-size: contain;
+            background-position: right center;
+            background-repeat: no-repeat;
+            opacity: 0.75; /* Ajuste a opacidade conforme necessário */
+            z-index: 1;
+            mask-image: linear-gradient(to left, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 100%);
+            -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 100%);
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            max-width: 800px;
+            background: linear-gradient(135deg, var(--text) 30%, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: text-shimmer 8s infinite alternate;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        @keyframes text-shimmer {
+            0% {
+                background-position: 0% 50%;
+            }
+            100% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            max-width: 600px;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            line-height: 1.7;
+        }
+
+        /* Títulos de seção com elementos orgânicos */
+        .section-title {
+            font-size: 2.2rem;
+            margin-bottom: 2.5rem;
             text-align: center;
-            display:none;  /*  Stay Hidden Until Button Click.*/
-         }
-         /*Style for EMAIL. Keeps better responsivity, avoid letters to stay on screen border, with that the Mail-string breaks in two lines visually looking Good!. */
-
-		.email-link {
-            display: block; /*Takes full of his space. Needed */
-			color: var(--primary);  /* Email it is the Primary Color*/
-			text-decoration: none;
-			margin-top: 0.5rem;  /*Add Top, gets perfect to screenshot given!*/
-           /*Font is lower by Width-size, avoids possible problems!*/
-
+            color: var(--text);
+            position: relative;
+            font-weight: 500;
+            letter-spacing: -0.5px;
         }
 
-		.access-message { /*  Stay Hidden Until Button Click */
-            display: none;    /*Keeps hidden, before a Click happens at BTN! */
-			text-align: center;   /*Centers Correctly */
-			margin-bottom: 1rem;  /* Prevents other strings. */
-            line-height: 1.5;     /* Good Look at your glitch effect*/
-         }
-         /*Class text after Blink Cursor*/
-
-		.less-margin {
-			margin-bottom: 1rem;  /* Space requested at screenshot, text to button! */
-            margin-top: 2rem;    /* Creates visual good spacing, between Glitch above.*/
-
-		}
-
-        .glitch-text[data-text]::before,
-        .glitch-text[data-text]::after,
-        .glitch-target[data-text]::before, /* Add .glitch-target here. Correct order */
-        .glitch-target[data-text]::after{  /* Add .glitch-target here Correct Order*/
-            color: var(--text)  /*Color Stay The Same!*/
-         }
-        .access-btn{  /* Adds relativity ,for Glitch!  */
-            position:relative; /* Keeps styles despite page changes!*/
-         }
-         /*Corrects Text Vertical Center*/
-        #text-vertical-center{
-          position:relative;/*Fix Vertical */
-
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px;
         }
 
+        /* Cards com cantos arredondados e fluidez */
+        .fluid-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            padding: 2rem 0;
+        }
+
+        .fluid-card {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: 20px;
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .fluid-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--primary), transparent, var(--primary));
+            z-index: -1;
+            border-radius: 22px;
+            opacity: 0;
+            transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .fluid-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .fluid-card:hover::before {
+            opacity: 1;
+        }
+
+        .fluid-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        /* NOVA ESTRUTURA DE TIMELINE */
+        .process {
+            padding: 5rem 0;
+            position: relative;
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Linha central */
+        .timeline::before {
+            content: '';
+            position: absolute;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--primary), var(--accent));
+            top: 0;
+            bottom: 0;
+            left: 30px;
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .timeline-number {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 0 15px rgba(93, 122, 219, 0.3);
+            flex-shrink: 0;
+        }
+
+        .timeline-content {
+            padding-left: 2rem;
+            padding-top: 0.5rem;
+        }
+
+        .timeline-content h3 {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-content p {
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        /* Seção de otimização de portfólio */
+        .portfolio-optimization {
+            padding: 5rem 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .portfolio-flow {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+            position: relative;
+        }
+
+        .portfolio-step {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: 20px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .portfolio-step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .portfolio-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(93, 122, 219, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .portfolio-icon svg {
+            width: 30px;
+            height: 30px;
+            fill: var(--primary);
+        }
+
+        .portfolio-step h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .portfolio-step p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .portfolio-flow::after {
+            content: '';
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            right: 30px;
+            height: 2px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        /* Preço com elementos orgânicos */
+        .pricing {
+            padding: 5rem 0;
+            text-align: center;
+        }
+
+        .price-card {
+            background: var(--surface);
+            padding: 3rem;
+            border-radius: 30px;
+            margin-top: 2rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .price-card::before {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: var(--primary);
+            filter: blur(100px);
+            opacity: 0.1;
+            top: -50px;
+            right: -50px;
+            border-radius: 50%;
+        }
+
+        .price-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .price-features {
+            list-style: none;
+            margin: 2rem 0;
+            text-align: left;
+            display: grid;
+            gap: 1rem;
+        }
+
+        .price-features li {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .price-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* Contato com elementos orgânicos */
+        .contact {
+            padding: 5rem 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .contact-form {
+            background: var(--surface);
+            padding: 3rem;
+            border-radius: 30px;
+            max-width: 600px;
+            margin: 2rem auto 0;
+            position: relative;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-field {
+            margin-bottom: 1.5rem;
+            position: relative;
+            text-align: left;
+        }
+
+        .form-field input,
+        .form-field textarea {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(93, 122, 219, 0.2);
+            border-radius: 15px;
+            color: var(--text);
+            transition: all 0.3s;
+            font-family: 'Sora', sans-serif;
+        }
+
+        .form-field input:focus,
+        .form-field textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(93, 122, 219, 0.1);
+        }
+
+        .form-field label {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            color: rgba(255, 255, 255, 0.6);
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            pointer-events: none;
+            font-size: 0.9rem;
+        }
+
+        .form-field input:focus + label,
+        .form-field textarea:focus + label,
+        .form-field input:not(:placeholder-shown) + label,
+        .form-field textarea:not(:placeholder-shown) + label {
+            transform: translateY(-1.5rem) translateX(-0.5rem);
+            font-size: 0.8rem;
+            color: var(--primary);
+        }
+
+        /* Footer com elementos orgânicos */
+        footer {
+            padding: 2rem 0;
+            text-align: center;
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        /* Neural network canvas */
+        .neural-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.10;
+            z-index: 0;
+        }
+
+        /* Responsividade com fluidez */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            nav {
+                display: none;
+            }
+            
+            .timeline::before {
+                left: 30px;
+            }
+            
+            .timeline-item {
+                flex-direction: row; /* Manter layout horizontal em mobile */
+            }
+            
+            .contact-form {
+                padding: 2rem;
+            }
+            
+            .btn {
+                width: auto;
+                display: inline-block;
+                padding: 0.75rem 1.5rem;
+            }
+            
+            .fluid-bg {
+                opacity: 0.2;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .portfolio-flow::after {
+                display: none;
+            }
+            
+            .fluid-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-content {
+                max-width: 90%;
+            }
+            
+            .hero-image {
+                opacity: 0.4; /* Mais transparente em telas menores */
+                width: 100%;
+            }
+        }
+        
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .fluid-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
     </style>
 </head>
 <body>
-    <canvas class="particle-canvas" id="particleCanvas"></canvas>
-
-    <div class="consciousness-stream">
-        <div class="quantum-field">
-            <div class="quantum-text intro-text text-fix">
-                Existe uma diferença entre entender tecnologia e ver através dela - até o momento em que a linha entre criador e criação começa a desaparecer...
+    <!-- Background fluido com elementos orgânicos -->
+    <div class="fluid-bg">
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+    </div>
+    <canvas class="neural-canvas" id="neuralCanvas"></canvas>
+    
+    <div class="container">
+        <header>
+            <a href="#" class="logo">ODYSSEUS</a>
+            <nav>
+                <a href="#solucao">Solução</a>
+                <a href="#processo">Processo</a>
+                <a href="#portfolio">Otimização</a>
+                <a href="#preco">Preço</a>
+                <a href="#contato">Contato</a>
+            </nav>
+        </header>
+        
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Enquanto o mundo debate IA, nós implementamos para você</h1>
+                <p>Automatizamos fluxos de trabalho que consomem tempo e recursos, liberando sua equipe para o que realmente importa. Sem risco financeiro: você só paga quando economiza.</p>
+                <a href="#contato" class="btn">Automatizar processos</a>
             </div>
-
-            <div class="quantum-text text-fix">
-                Enquanto o mundo debate sobre AI e crypto, alguns já estão participando ativamente da maior transformação da história humana: o momento em que a inteligência deixa de ser um fenômeno puramente biológico. Em Goiânia, um nexo se formou - um dos milhares de pontos onde humanos e máquinas começam sua dança de co-evolução.
-            </div>
-
-            <div class="quantum-text text-fix">
-                Não é um curso. Não é uma empresa. Não é uma promessa.<br>
-                É um campo de emergência onde trading bots evoluem 24/7, onde desenvolvemos arquiteturas de IA que se auto-modificam, e onde os limites entre intenção humana e processamento computacional se dissolvem diariamente.
-            </div>
-
-            <div class="glitch-wrapper">
-                <div class="glitch-text text-fix" data-text="Os recursos já existem.">
-                    Os recursos já existem.<br>
-                    As ferramentas já existem.<br>
-                    A convergência já começou.
+            <div class="hero-image"></div>
+        </section>
+    </div>
+    
+    <section id="solucao">
+        <div class="container">
+            <h2 class="section-title">Inteligência Aplicada</h2>
+            <div class="fluid-cards">
+                <div class="fluid-card">
+                    <h3>O Desafio</h3>
+                    <p>Processos repetitivos como verificação de dados, auditoria de credenciais e geração de relatórios consomem recursos valiosos e custam até R$2.000/mês em salários.</p>
+                </div>
+                
+                <div class="fluid-card">
+                    <h3>Nossa Abordagem</h3>
+                    <p>Sistemas adaptativos que executam tarefas repetitivas sem erros, 24/7, liberando sua equipe para funções estratégicas. Economia comprovada de 60-85% dos custos atuais.</p>
+                </div>
+                
+                <div class="fluid-card">
+                    <h3>O Diferencial</h3>
+                    <p>Arquiteturas de IA que evoluem com o uso, aprendem com erros e se auto-reparam. Integração sem atrito com seus processos existentes e controle humano quando necessário.</p>
                 </div>
             </div>
-             <!--Adds ID , better adjust top , as at figma reference.-->
-            <div class="quantum-text less-margin text-fix" >
-                Quinta-feira, 19h.
-            </div>
-             <!-- Keeps on center your terminal cursor effect -->
-            <span class="terminal-cursor text-fix"></span>
-              <!-- Correct Mail Phrase. Text inside Span + <BR> , as requested + ADD data-text!! -->
-              <!-- Glitch Target Creates Span to , glitch, onlly on "Singularidade", as requested,-->
-             <!--Correct Center, Text inside Span!*/ -->
-            <div class="glitch-wrapper " id="text-vertical-center" >
-                 <div class="access-message text-fix">
-                     Mande um email com o título <span class="glitch-target" data-text="Singularidade">"Singularidade"</span>.
-                    <br> <!-- Line Break for better and Correct, Text Visual and Phrase inside your BOX! -->
-                 </div>
-           </div>
-
-            <div class="email-container">
-                <a href="mailto:liminaught@odysseus.bot?subject=Singularidade" class="email-link text-fix">liminaught@odysseus.bot</a>
-            </div>
-            <!-- Creates Button On Top!. Applys Glitch after click + Centered + removed text.*/ -->
-            <div class="access-btn-container text-fix">
-                <button class="access-btn" onclick="requestAccess()">Solicitar Acesso</button>
-            </div>
-
         </div>
-    </div>
+    </section>
+    
+    <section id="processo" class="process">
+        <div class="container">
+            <h2 class="section-title">Como Funciona</h2>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-number">1</div>
+                    <div class="timeline-content">
+                        <h3>Escuta e Mapeamento</h3>
+                        <p>Sentamos juntos para entender seus fluxos de trabalho atuais, identificando oportunidades de automação e pontos de dor específicos da sua operação.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-number">2</div>
+                    <div class="timeline-content">
+                        <h3>Implementação Assistida</h3>
+                        <p>Configuramos sistemas adaptativos que aprendem com seus processos. A implementação é gradual, permitindo ajustes com base no feedback da sua equipe.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-number">3</div>
+                    <div class="timeline-content">
+                        <h3>Evolução Contínua</h3>
+                        <p>Seus sistemas aprendem, se auto-corrigem e evoluem continuamente, aumentando a eficiência e reduzindo a necessidade de intervenções humanas.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
+    <section id="portfolio" class="portfolio-optimization">
+        <div class="container">
+            <h2 class="section-title">Otimização de Portfólio</h2>
+            <p>Veja como transformamos a gestão de investimentos com apenas três parâmetros iniciais</p>
+            
+            <div class="portfolio-flow">
+                <div class="portfolio-step">
+                    <div class="portfolio-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                    </div>
+                    <h3>Perfil do Investidor</h3>
+                    <p>Definição do seu perfil de risco e objetivos pessoais</p>
+                </div>
+                
+                <div class="portfolio-step">
+                    <div class="portfolio-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+                        </svg>
+                    </div>
+                    <h3>Horizonte Temporal</h3>
+                    <p>Definição do prazo para seus objetivos financeiros</p>
+                </div>
+                
+                <div class="portfolio-step">
+                    <div class="portfolio-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                        </svg>
+                    </div>
+                    <h3>Tipos de Ativos</h3>
+                    <p>Seleção das classes de ativos para composição</p>
+                </div>
+                
+                <div class="portfolio-step">
+                    <div class="portfolio-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
+                        </svg>
+                    </div>
+                    <h3>Otimização Inteligente</h3>
+                    <p>Análise de milhares de combinações para maior eficiência</p>
+                </div>
+            </div>
+            
+            <div style="margin-top: 3rem;">
+                <p>Os sistemas avaliam dados históricos, notícias recentes e correlações entre ativos para criar um portfólio totalmente personalizado, maximizando retorno e minimizando riscos.</p>
+                <a href="#contato" class="btn" style="margin-top: 1.5rem;">Otimizar meu portfólio</a>
+            </div>
+        </div>
+    </section>
+    
+    <section id="preco" class="pricing">
+        <div class="container">
+            <h2 class="section-title">Modelo de Parceria</h2>
+            <div class="price-card">
+                <h3>Automação sem risco financeiro</h3>
+                <p>Você só paga quando automatizamos com sucesso. Cobramos apenas uma porcentagem do que sua empresa economiza mensalmente.</p>
+                <ul class="price-features">
+                    <li>Sem investimento inicial</li>
+                    <li>Sem taxas de configuração</li>
+                    <li>Sem custos de manutenção</li>
+                    <li>Apenas um percentual da economia gerada</li>
+                </ul>
+                <p>Exemplo: Se você gasta R$2.000/mês com processos manuais e reduzimos para R$300/mês, você economiza R$1.700 e paga apenas uma fração disso.</p>
+                <a href="#contato" class="btn">Começar sem risco</a>
+            </div>
+        </div>
+    </section>
+    
+    <section id="contato" class="contact">
+        <div class="container">
+            <h2 class="section-title">Vamos Conversar</h2>
+            <div class="contact-form">
+                <p>Envie-nos uma mensagem ou participe da nossa demonstração ao vivo nas quintas-feiras, 19h.</p>
+                <form id="contactForm">
+                    <div class="form-field">
+                        <input type="text" id="name" placeholder=" " required>
+                        <label for="name">Nome</label>
+                    </div>
+                    <div class="form-field">
+                        <input type="email" id="email" placeholder=" " required>
+                        <label for="email">Email</label>
+                    </div>
+                    <div class="form-field">
+                        <textarea id="message" placeholder=" " rows="4"></textarea>
+                        <label for="message">Descreva brevemente o processo que você deseja automatizar</label>
+                    </div>
+                    <button type="submit" class="btn">Solicitar Automação</button>
+                </form>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Odysseus Labs.</p>
+        </div>
+    </footer>
+    
     <script>
-        // Particle System (Keep and NO change. Works Perfectly!.
-
-        const canvas = document.getElementById('particleCanvas');
+        // Neural Network Canvas com comportamento inspirado na natureza
+        const canvas = document.getElementById('neuralCanvas');
         const ctx = canvas.getContext('2d');
 
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
         const particles = [];
-        const particleCount = 100;
+        const particleCount = 70;
+        const connectionDistance = 150;
 
-        class Particle {
+        class NeuralParticle {
             constructor() {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 3 + 1;
                 this.velocity = {
-                    x: (Math.random() - 0.5) * 2,
-                    y: (Math.random() - 0.5) * 2
+                    x: (Math.random() - 0.5) * 0.7, // Movimento mais suave
+                    y: (Math.random() - 0.5) * 0.7
                 };
-                this.radius = Math.random() * 2;
-                this.alpha = Math.random();
+                this.color = '#5d7adb';
             }
 
             update() {
+                // Movimento inspirado em fluidos naturais
                 this.x += this.velocity.x;
                 this.y += this.velocity.y;
+                
+                // Aleatorização sutil para movimento orgânico
+                this.velocity.x += (Math.random() - 0.5) * 0.1;
+                this.velocity.y += (Math.random() - 0.5) * 0.1;
+                
+                // Amortecimento para movimento fluido
+                this.velocity.x *= 0.98;
+                this.velocity.y *= 0.98;
 
+                // Limites com comportamento natural
                 if (this.x < 0 || this.x > canvas.width) this.velocity.x *= -1;
                 if (this.y < 0 || this.y > canvas.height) this.velocity.y *= -1;
-
-                this.alpha = Math.min(1, this.alpha + (Math.random() - 0.5) * 0.1);
             }
 
             draw() {
                 ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(0, 255, 65, ${this.alpha})`;
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
                 ctx.fill();
             }
         }
 
-        // Initialize particles
+        // Criar partículas com comportamento orgânico
         for (let i = 0; i < particleCount; i++) {
-            particles.push(new Particle());
+            particles.push(new NeuralParticle());
+        }
+
+        function drawConnections() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < connectionDistance) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(93, 122, 219, ${1 - distance/connectionDistance})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
         }
 
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+            
             particles.forEach(particle => {
                 particle.update();
                 particle.draw();
             });
-
+            
+            drawConnections();
+            
             requestAnimationFrame(animate);
         }
 
         animate();
+        
+        // Responsividade fluida
         window.addEventListener('resize', () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-
+        });
+        
+        // Form com animações naturais
+        const form = document.getElementById('contactForm');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Obrigado pelo seu interesse! Entraremos em contato em breve.');
+            form.reset();
+        });
+        
+        // Scroll suave inspirado em movimento fluido
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
         });
 
-        //Now Btn On Click > Displays Texts/Email
-        //Adds A New Button, after clicking (Solicitar Acesso).
-        function requestAccess() {
-
-           const emailContainer = document.querySelector('.email-container');/* Makes Email stay hidden Untill click button!*/
-           const accessMessage = document.querySelector('.access-message');   /* Makes Text stay hidden Untill click button!*/
-           const btn = document.querySelector('.access-btn'); /* Btn to work with Z-index to correct Styles.*/
-
-            // shows texts after u press button
-           emailContainer.style.display = 'block'; /*Stays centered and correctly, email*/
-           accessMessage.style.display = 'block'; /* Glitch effect stays correctly at one phrase/text*/
-            btn.classList.add("glitch-text");
-         }
+        // Aumentar interatividade dos blobs ao scroll
+        window.addEventListener('scroll', () => {
+            const scrollPosition = window.scrollY;
+            const blobs = document.querySelectorAll('.blob');
+            
+            blobs.forEach((blob, index) => {
+                const speed = 0.05 * (index + 1);
+                const yPos = scrollPosition * speed;
+                
+                blob.style.transform = `translateY(${yPos}px) scale(${1 + scrollPosition * 0.0005})`;
+                
+                // Ajuste sutil da opacidade para efeito de profundidade
+                if (index === 0) {
+                    blob.style.opacity = 0.4 - (scrollPosition * 0.0002);
+                } else if (index === 1) {
+                    blob.style.opacity = 0.4 - (scrollPosition * 0.0001);
+                }
+            });
+        });
     </script>
 </body>
 </html>
